@@ -3,7 +3,6 @@ import Header from "@/components/Header";
 import DateSearchBar from "@/components/DateSearchBar";
 import HotelCard from "@/components/HotelCard";
 import CampusMap from "@/components/CampusMap";
-import BookingModal from "@/components/BookingModal";
 import ChatBot from "@/components/ChatBot";
 import { hotels } from "@/config/hotels";
 import { CheckCircle2, ChevronRight, ChevronDown, Loader2 } from "lucide-react";
@@ -19,7 +18,6 @@ const SORT_OPTIONS: { value: SortKey; label: string }[] = [
 export default function HomePage() {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
-  const [modalHotel, setModalHotel] = useState<string | null>(null);
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState<SortKey>("distance");
@@ -161,7 +159,6 @@ export default function HomePage() {
                 checkIn={checkIn}
                 checkOut={checkOut}
                 searched={searched}
-                onDoneBooking={(name) => setModalHotel(name)}
               />
             ))}
           </div>
@@ -183,21 +180,21 @@ export default function HomePage() {
                 />
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-base" style={{ color: "#121214" }}>
-                    Next Step — Already Booked?
+                    Next Step — Need Anything Else?
                   </p>
                   <p className="text-sm text-[#6b7280] mt-0.5 leading-relaxed">
-                    Once you've reserved your room, let us know and we'll send you a personalised
-                    Welcome&nbsp;to&nbsp;Toronto email with campus details, directions, and parking.
+                    Once you've reserved your room, connect with the Rotman Executive Programs
+                    team for campus details, directions, and parking.
                   </p>
                 </div>
-                <button
-                  onClick={() => setModalHotel("")}
+                
+                  href="mailto:ExecutivePrograms@Rotman.Utoronto.Ca"
                   className="shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white whitespace-nowrap cursor-pointer transition-opacity hover:opacity-90"
                   style={{ background: "#E20778" }}
                 >
-                  Already Booked
+                  ExecutivePrograms@Rotman.Utoronto.Ca
                   <ChevronRight className="w-4 h-4" />
-                </button>
+                </a>
               </div>
             </div>
           )}
@@ -228,14 +225,6 @@ export default function HomePage() {
           </p>
         </div>
       </footer>
-
-      {/* Booking Modal */}
-      {modalHotel !== null && (
-        <BookingModal
-          initialHotel={modalHotel}
-          onClose={() => setModalHotel(null)}
-        />
-      )}
 
       <ChatBot />
     </div>
