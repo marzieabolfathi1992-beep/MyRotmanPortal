@@ -1,4 +1,5 @@
-import { MapPin, Tag, ExternalLink, ChevronRight, Star, PersonStanding } from "lucide-react";
+import { MapPin, Tag, ExternalLink, ChevronRight, Star, PersonStanding, Copy, Check } from "lucide-react";
+import { useState } from "react";
 import type { Hotel } from "@/config/hotels";
 
 interface Props {
@@ -6,11 +7,21 @@ interface Props {
   checkIn: string;
   checkOut: string;
   searched: boolean;
-  onDoneBooking: (hotelName: string) => void;
 }
 
-export default function HotelCard({ hotel, checkIn, checkOut, searched, onDoneBooking }: Props) {
+export default function HotelCard({ hotel, checkIn, checkOut, searched }: Props) {
   const hasData = !!(checkIn && checkOut);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(hotel.corporateCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Clipboard API unavailable — fail silently, code is still visible to copy manually
+    }
+  };
 
   const handleBooking = () => {
     const url = hotel.buildBookingUrl(checkIn, checkOut);
@@ -111,9 +122,17 @@ export default function HotelCard({ hotel, checkIn, checkOut, searched, onDoneBo
           <span className="text-[10px] tracking-widest uppercase text-muted-foreground font-medium">
             Corporate Code
           </span>
-          <span className="ml-auto font-mono font-bold text-sm text-foreground">
+          <span className="font-mono font-bold text-sm text-foreground">
             {hotel.corporateCode}
           </span>
+          <button
+            onClick={handleCopyCode}
+            className="ml-auto flex items-center justify-center w-6 h-6 rounded-md text-muted-foreground hover:text-[#E20778] hover:bg-pink-50 transition-colors cursor-pointer shrink-0"
+            aria-label="Copy corporate code"
+            title="Copy code"
+          >
+            {copied ? <Check className="w-3.5 h-3.5" style={{ color: "#E20778" }} /> : <Copy className="w-3.5 h-3.5" />}
+          </button>
         </div>
 
         <div className="mt-auto space-y-2">
@@ -139,12 +158,12 @@ export default function HotelCard({ hotel, checkIn, checkOut, searched, onDoneBo
             )}
           </button>
 
-          <button
-            onClick={() => onDoneBooking(hotel.name)}
+          
+            href="mailto:ExecutivePrograms@Rotman.Utoronto.Ca"
             className="w-full flex items-center justify-center gap-1.5 py-2 px-4 rounded-xl text-xs font-medium text-muted-foreground hover:text-[#E20778] hover:bg-pink-50 transition-colors cursor-pointer border border-transparent hover:border-pink-100"
           >
-            ✓ Already booked? Let us know
-          </button>
+            Questions? Contact Rotman Executive Programs
+          </a>
         </div>
       </div>
     </div>
